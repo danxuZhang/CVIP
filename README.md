@@ -1,2 +1,3 @@
 # LearningOpenCV
-Code for the book Learning OpenCV
+
+My notes and code for learning OpenCV
