@@ -1,6 +1,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgcodecs.hpp>
+#include <opencv2/imgproc.hpp>
 #include <iostream>
 
 int brightness() {
@@ -56,6 +57,28 @@ int contrast() {
     return 0;
 }
 
+int musicSheetReader() {
+    std::string file_path = "../images/Piano_Sheet_Music.png";
+    cv::Mat img = cv::imread(file_path, cv::IMREAD_GRAYSCALE);
+    if (img.data == NULL) {
+        std::cerr << "Image not found" << std::endl;
+        return 1;
+    }
+
+    cv::Mat res;
+    cv::adaptiveThreshold(img, res, 255, cv::ADAPTIVE_THRESH_MEAN_C, cv::THRESH_BINARY, 11, 7);
+
+    cv::namedWindow("Original");
+    cv::imshow("Original", img);
+    cv::namedWindow("Adaptive Threshold");
+    cv::imshow("Adaptive Threshold", res);
+
+    cv::waitKey();
+    cv::destroyAllWindows();
+
+    return 0;
+}
+
 int test() {
     std::string file_path = "../images/coca-cola-logo.png";
     cv::Mat img = cv::imread(file_path);
@@ -72,5 +95,5 @@ int test() {
 }
 
 int main() {
-    return contrast();
+    return musicSheetReader();
 }
