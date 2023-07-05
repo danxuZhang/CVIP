@@ -1,3 +1,3 @@
-# LearningOpenCV
+# CVIR
 
-My notes and code for learning OpenCV
+My notes and code for learning Computer Vision and Image Processing
