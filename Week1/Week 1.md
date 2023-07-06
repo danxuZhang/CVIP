@@ -20,7 +20,7 @@
 * Projector camera systems
 * Construction of 3D from 2D images
 
-#### Visual Slam 
+#### Visual Slam
 
 * Simultaneous Localization and Mapping
 
@@ -68,11 +68,11 @@
 
 ### Reading an Image: `cv::imread`
 
-**Function Syntax** 
+**Function Syntax**
 
 ```c++
 Mat cv::imread  (   const String &  filename,
-int     flags = IMREAD_COLOR 
+int     flags = IMREAD_COLOR
 )
 ```
 
@@ -166,7 +166,7 @@ img.copyTo(copiedImage(Range(40, 40+height), Range(10, 10 + width)));
 
 ### Resizing an Image: `cv::resize`
 
-**Function Syntax** 
+**Function Syntax**
 
 ```
 void cv::resize (   InputArray  src,
@@ -174,7 +174,7 @@ OutputArray     dst,
 Size    dsize,
 double  fx = 0,
 double  fy = 0,
-int     interpolation = INTER_LINEAR 
+int     interpolation = INTER_LINEAR
 )
 ```
 
@@ -199,7 +199,7 @@ There are two ways of using the resize function.
    resize(img, res, Size(resizedWidth, resizedHeight), INTER_LINEAR);
    ```
 
-   
+
 
 2. Specify the scaling factors for resizing ( for both width and height )
 
@@ -229,7 +229,7 @@ It finds the pixels which lie in between the specified range. It produces a bina
 void cv::inRange    (   InputArray  src,
 InputArray  lowerb,
 InputArray  upperb,
-OutputArray     dst 
+OutputArray     dst
 )
 ```
 
@@ -314,7 +314,7 @@ for (int i=0; i < 3; i++)
 merge(brightHighChannels_32F, 3, bright_32F);
 ```
 
-### Performing normalization 
+### Performing normalization
 
 Note that the colors appear washed. This is because after performing addition, some pixel intensities has values greater than 1. Meaning the image is not in correct range of [0,1], which means all the values that are above 1 will be mapped to 255. Making the image appear washed. We can tone the image by normalizing it to the correct range.
 
@@ -339,3 +339,175 @@ cout << "Maximum pixel intensity : " << maxVal;
 bright_normalized_32F = bright_normalized_32F/maxVal;
 ```
 
+## Bitwise Operations
+
+**AND operation**: [**`cv::bitwise_and`**](https://docs.opencv.org/4.1.0/d2/de8/group__core__array.html#ga60b4d04b251ba5eb1392c34425497e14)
+
+**OR operation**: [**`cv::bitwise_or`**](https://docs.opencv.org/4.1.0/d2/de8/group__core__array.html#gab85523db362a4e26ff0c703793a719b4)
+
+**NOT operation**: [**`cv::bitwise_not`**](https://docs.opencv.org/4.1.0/d2/de8/group__core__array.html#ga0002cf8b418479f4cb49a75442baee2f)
+
+**XOR operation**: [**`cv::bitwise_xor`**](https://docs.opencv.org/4.1.0/d2/de8/group__core__array.html#ga84b2d8188ce506593dcc3f8cd00e8e2c)
+
+Among all the bitwsie operations, the AND operation is the most used.
+
+### Function Syntax
+
+```cpp
+void cv::bitwise_XXX    (   InputArray  src1,
+InputArray  src2,
+OutputArray     dst,
+InputArray  mask = noArray()
+)
+```
+
+XXX stands for the operation
+
+**Parameters**
+
+- **`src1`** - first input.
+- **`src2`** - second input.
+- **`dst`** - output array that has the same size and type as the input array.
+- **`mask`** - optional operation mask, 8-bit single channel array, that specifies elements of the output array to be changed. The operation is applied only on those pixels of the input images where the mask is non-zero.
+
+**The operation is applied elementwise between two matrices. The two inputs should be of the same size for this operation.**
+
+
+
+## Image Annotations
+
+### Draw lines: `cv::line`
+
+**Function Syntax**
+
+```cpp
+void cv::line   (InputOutputArray   img,
+Point   pt1,
+Point   pt2,
+const Scalar &  color,
+int     thickness = 1,
+int     lineType = LINE_8,
+int     shift = 0
+)
+```
+
+The arguments that we will focus on are:
+
+1. `img`: Image on which we will draw a line
+2. `pt1`: First point of the line segment
+3. `pt2`: Second point of the line segment
+4. `color`: Color of the line which will be drawn
+
+The above arguments are compulsory. Other arguments that are important for us to know and are optional are:
+
+1. `thickness`: Integer specifying the line thickness. Default value is **1**.
+2. `lineType`: Type of the line. Default value is **LINE_8** which stands for an 8-connected line. Usually, **`LINE_AA`** (antialiased line) is used for the `lineType`.
+
+### Draw circles: `cv::circle`
+
+**Function Syntax**
+
+```cpp
+void cv::circle (   InputOutputArray    img,
+Point   center,
+int     radius,
+const Scalar &  color,
+int     thickness = 1,
+int     lineType = LINE_8,
+int     shift = 0
+)
+```
+
+First, the mandatory arguments:
+
+1. `img`: Image where the circle is drawn.
+2. `center`: Center of the circle.
+3. `radius`: Radius of the circle.
+4. `color`: Circle color
+
+Next, let's check out the (optional) arguments which we are going to use quite extensively.
+
+1. `thickness`: Thickness of the circle outline (if positive). If a negative value is supplied for this argument, it will result in a **filled** circle.
+2. `lineType`: Type of the circle boundary. This is exact same as `lineType` argument in `cv::line`
+
+### Draw eclipse: `cv::ecllipse`
+
+**Function Syntax**
+
+```cpp
+void cv::ellipse    (   InputOutputArray    img,
+Point   center,
+Size    axes,
+double  angle,
+double  startAngle,
+double  endAngle,
+const Scalar &  color,
+int     thickness = 1,
+int     lineType = LINE_8,
+int     shift = 0
+)
+```
+
+The mandatory arguments are as follows.
+
+1. `img`: Image on which the ellipse is to be drawn.
+2. `center`: Center of the ellipse.
+3. `axes`: Half of the size of the ellipse main axes.
+4. `angle`: Ellipse rotation angle in degrees.
+5. `startAngle`: Starting angle of the elliptic arc in degrees.
+6. `endAngle`: Ending angle of the elliptic arc in degrees.
+7. `color`: Ellipse line color
+
+The optional arguments that we are going to use are the same as before and carry the same meaning.
+
+### Draw rectangles: `cv::rectangle`
+
+**Function Syntax**
+
+```cpp
+void cv::rectangle  (   InputOutputArray    img,
+Point   pt1,
+Point   pt2,
+const Scalar &  color,
+int     thickness = 1,
+int     lineType = LINE_8,
+int     shift = 0
+)
+```
+
+The mandatory arguments are as follows.
+
+1. `img`: Image on which the rectangle is to be drawn.
+2. `pt1`: Vertex of the rectangle. Usually we use the top-left vertex here.
+3. `pt2`: Vertex of the rectangle opposite to `pt1`. Usually we use the bottom-right vertex here.
+4. `color`: Rectangle color
+
+The optional arguments that we are going to use are same as before.
+
+### Draw text: `cv::putText`
+
+**Function Syntax**
+
+```cpp
+void cv::putText    (   InputOutputArray    img,
+const String &  text,
+Point   org,
+int     fontFace,
+double  fontScale,
+Scalar  color,
+int     thickness = 1,
+int     lineType = LINE_8,
+bool    bottomLeftOrigin = false
+)
+```
+
+The mandatory arguments that we need to focus on are:
+
+1. `img`: Image on which the text has to be written.
+2. `text`: Text string to be written.
+3. `org`: Bottom-left corner of the text string in the image.
+4. `fontFace`: Font type
+5. `fontScale`: Font scale factor that is multiplied by the font-specific base size.
+6. `color`: Font color
+
+The optional arguments that we are going to use are same as before.
