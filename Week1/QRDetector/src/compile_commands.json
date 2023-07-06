@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/home/danxu/Code/CVIP/Week1/QRDetector/build",
+  "command": "/usr/bin/c++  -isystem /usr/include/opencv4 -std=gnu++17 -o CMakeFiles/QRDetector.dir/src/main.cc.o -c /home/danxu/Code/CVIP/Week1/QRDetector/src/main.cc",
+  "file": "/home/danxu/Code/CVIP/Week1/QRDetector/src/main.cc",
+  "output": "CMakeFiles/QRDetector.dir/src/main.cc.o"
+}
+]
