@@ -1,6 +1,6 @@
 # Video I/O & GUI
 
-# Read and display a Video in OpenCV
+## Read and display a Video in OpenCV
 
 Just like we used [**`imread`**](https://docs.opencv.org/4.1.0/d4/da8/group__imgcodecs.html#ga288b8b3da0892bd651fce07b3bbd3a56) to read an image stored on our machine, we will use **`VideoCapture`** to create a [**VideoCapture**](https://docs.opencv.org/4.1.0/d8/dfe/classcv_1_1VideoCapture.html#ac4107fb146a762454a8a87715d9b7c96) object and read from input file (video).
 
@@ -20,9 +20,9 @@ int     apiPreference = CAP_ANY
   - or URL of video stream (eg. protocol://host:port/script_name?script_params|auth). Note that each video stream or IP camera feed has its own URL scheme. Please refer to the documentation of source stream to know the right URL.
 - **`apiPreference`**: preferred Capture API backends to use. Can be used to enforce a specific reader implementation if multiple are available: e.g. cv::CAP_FFMPEG or cv::CAP_IMAGES or cv::CAP_DSHOW.
 
-## Create a video reader object 
+### Create a video reader object 
 
-```
+```cpp
 VideoCapture cap(args)
 ```
 
@@ -60,7 +60,7 @@ while(cap.isOpened()){
 }
 ```
 
-# Write a Video in OpenCV
+## Write a Video in OpenCV
 
 After we are done with capturing and processing the video frame by frame, the next step we would want to do is to save the video.
 
@@ -142,3 +142,102 @@ cap.release();
 out.release();
 ```
 
+## Keyboard Input
+
+Getting the input from the keyboard is done using the [**`waitKey()`**](https://docs.opencv.org/4.1.0/d7/dfc/group__highgui.html#ga5628525ad33f52eab17feebcfba38bd7) function.
+
+### Function Syntax 
+
+```
+int cv::waitKey (   int     delay = 0   )
+```
+
+**Parameters**
+
+- **`delay`** : Delay in milliseconds. 0 is the special value that means "forever".
+
+The code given below opens the webcam and displays text when ‘e/E’ or ‘z/Z’ is pressed. On pressing ‘ESC’ the program terminates and the display window closes. Note the use of **`waitKey`** here and how this time **`waitKey(0)`** has not been used rather there is some finite delay (10 s). This delay helps to see the text better else the text would disappear as soon as it got displayed.
+
+We will only focus on the relevant code snippet here.
+
+```cpp
+while(1)
+  // Read frame
+  cap>>frame;
+```
+
+The following if-else block is used to check which key is pressed.
+
+We use the **`waitKey()`** function to detect the input and respond only if either 'e' or 'z' is pressed. 'ESC'( ASCII code = 27) is used to exit the program.
+
+```cpp
+// Identify if 'ESC' is pressed or not
+  if(k==27)
+    break;
+  // Identify if 'e' or 'E' is pressed
+  if(k==101 || k==69)
+    // Do something
+  // Identify if 'z' or 'Z' is pressed
+  if(k==90 or k==122)
+    // Do something
+  // Display the frame
+  imshow("Image",frame);
+  // Change waitkey to show display properly
+  k= waitKey(10000) & 0xFF;
+```
+
+## How to use the Mouse in OpenCV 
+
+We can detect mouse events like *left-click*, *right-click* or *position* of the mouse on the window using OpenCV. For doing that, we need to create a **named window** and assign a **callback function** to the window. We will see how it is done in the code.
+
+The code given below draws a circle on the image. You first mark the center of the circle and then drag the mouse according to the radius desired. Multiple circles can be drawn. 'c' is used to clear the screen (the circles) and pressing 'ESC' terminates the program. We will see the detailed code in the code video. For now, let's just focus on the callback function.
+
+```cpp
+// function which will be called on mouse input
+void drawCircle(int action, int x, int y, int flags, void *userdata)
+{
+  // Action to be taken when left mouse button is pressed
+  if( action == EVENT_LBUTTONDOWN )
+  {
+    center = Point(x,y);
+    // Mark the center
+    circle(source, center, 1, Scalar(255,255,0), 2, CV_AA );
+  }
+  // Action to be taken when left mouse button is released
+  else if( action == EVENT_LBUTTONUP)
+  {
+    circumference = Point(x,y);
+    // Calculate radius of the circle
+    float radius = sqrt(pow(center.x-circumference.x,2)+pow(center.y-circumference.y,2));
+    // Draw the circle
+    circle(source, center, radius, Scalar(0,255,0), 2, CV_AA );
+    imshow("Window", source);
+  } 
+}
+```
+
+**`drawCircle`** the callback function is called when there is a mouse event like left click ( indicated by **`EVENT_LBUTTONDOWN`** ). The coordinates relative to the namedWindow is captured by this function in the variables (x,y). The function records the points of the circle’s center and a point on the circumference, hence allowing us to draw the desired circle on the image.
+
+This is how the callback function is used:
+
+```cpp
+// highgui function called when mouse events occur
+setMouseCallback("Window", drawCircle);
+```
+
+### Function Syntax 
+
+The function syntax for [**`setMouseCallback`**](https://docs.opencv.org/4.1.0/d7/dfc/group__highgui.html#ga89e7806b0a616f6f1d502bd8c183ad3e) is as follows.
+
+```cpp
+void cv::setMouseCallback   (   const String &  winname,
+MouseCallback   onMouse,
+void *  userdata = 0 
+)
+```
+
+**Parameters**
+
+- **`winname`** - Name of the window.
+- **`onMouse`** - Callback function for mouse events.
+- **`userdata`** - The optional parameter passed to the callback.
