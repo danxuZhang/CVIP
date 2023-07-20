@@ -1,8 +1,0 @@
-[
-{
-  "directory": "/home/danxu/Code/LearningOpenCV/templates",
-  "command": "/usr/bin/c++  -isystem /usr/include/opencv4 -std=gnu++17 -o CMakeFiles/MyOpenCVProject.dir/src/main.cc.o -c /home/danxu/Code/LearningOpenCV/templates/src/main.cc",
-  "file": "/home/danxu/Code/LearningOpenCV/templates/src/main.cc",
-  "output": "CMakeFiles/MyOpenCVProject.dir/src/main.cc.o"
-}
-]
